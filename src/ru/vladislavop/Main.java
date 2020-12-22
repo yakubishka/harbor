@@ -14,8 +14,8 @@ public class Main {
     Ship rusShip = new Ship("Аврора", liqCargo);
     Ship usShip = new Ship("Susana", contCargo);
 
-    ScheduleEntry<LiquidCargo> firstEntry = new ScheduleEntry<>(rusShip, 21321312312L, 2131L);
-    ScheduleEntry<ContainerCargo> secondEntry = new ScheduleEntry<>(usShip, 12312321321L, 12312312L);
+    ScheduleEntry firstEntry = new ScheduleEntry(rusShip, 21321312312L, 2131L);
+    ScheduleEntry secondEntry = new ScheduleEntry(usShip, 12312321321L, 12312312L);
 
     Scheduler scheduler = new Scheduler();
     scheduler.addEntry(firstEntry);

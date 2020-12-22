@@ -4,13 +4,13 @@ import ru.vladislavop.Ship;
 import ru.vladislavop.Utils;
 import ru.vladislavop.cargo.BaseCargo;
 
-public class ScheduleEntry<T extends BaseCargo> {
+public class ScheduleEntry{
 
   private long arriveDateTimestamp;
-  private Ship<T> ship;
+  private Ship ship;
   private long plannedUnloadPeriod;
 
-  public ScheduleEntry(Ship<T> ship, long arriveDateTimestamp, long plannedUnloadPeriod) {
+  public ScheduleEntry(Ship ship, long arriveDateTimestamp, long plannedUnloadPeriod) {
     this.arriveDateTimestamp = arriveDateTimestamp;
     this.ship = ship;
     this.plannedUnloadPeriod = plannedUnloadPeriod;
@@ -24,11 +24,11 @@ public class ScheduleEntry<T extends BaseCargo> {
     this.arriveDateTimestamp = arriveDateTimestamp;
   }
 
-  public Ship<? extends BaseCargo> getShip() {
+  public Ship getShip() {
     return ship;
   }
 
-  public void setShip(Ship<T> ship) {
+  public void setShip(Ship ship) {
     this.ship = ship;
   }
 
