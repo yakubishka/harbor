@@ -2,12 +2,12 @@ package ru.vladislavop;
 
 import ru.vladislavop.cargo.BaseCargo;
 
-public class Ship {
+public class Ship <T extends BaseCargo> {
 
-  private String name;
-  private BaseCargo cargo;
+  private final String name;
+  private final T cargo;
 
-  public Ship(String name, BaseCargo cargo) {
+  public Ship(String name, T cargo) {
     this.name = name;
     this.cargo = cargo;
   }
@@ -16,7 +16,7 @@ public class Ship {
     return name;
   }
 
-  public BaseCargo getCargo() {
+  public T getCargo() {
     return cargo;
   }
 
