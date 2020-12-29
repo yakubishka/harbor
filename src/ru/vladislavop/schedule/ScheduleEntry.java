@@ -2,7 +2,6 @@ package ru.vladislavop.schedule;
 
 import ru.vladislavop.Ship;
 import ru.vladislavop.Utils;
-import ru.vladislavop.cargo.BaseCargo;
 
 public class ScheduleEntry{
 

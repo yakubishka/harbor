@@ -1,7 +1,5 @@
 package ru.vladislavop.offloadline;
 
-public interface Offloadable {
-
-
+public class LiquidOffloadLine {
 
 }
