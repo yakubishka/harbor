@@ -15,8 +15,6 @@ public abstract class BaseLine<T extends Loadable> {
     this.delayConditionList = delayConditionList;
   }
 
-  protected void handle() {
-    
-  }
+  abstract void handle();
 
 }

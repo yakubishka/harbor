@@ -1,7 +1,6 @@
 package ru.vladislavop.crane.types;
 
 import ru.vladislavop.cargo.BaseCargo;
-import ru.vladislavop.cargo.types.ContainerCargo;
 import ru.vladislavop.crane.DelayCondition;
 import ru.vladislavop.crane.Loadable;
 
