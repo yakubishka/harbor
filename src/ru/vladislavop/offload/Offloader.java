@@ -7,7 +7,6 @@ import ru.vladislavop.crane.types.CraneLiquid;
 import ru.vladislavop.crane.types.CraneLoose;
 import ru.vladislavop.schedule.ScheduleEntry;
 import ru.vladislavop.schedule.Scheduler;
-
 import java.util.List;
 
 public class Offloader {
@@ -20,9 +19,9 @@ public class Offloader {
     for (ScheduleEntry entry : scheduler.getScheduleList()) {
       Ship ship = entry.getShip();
       entry.setRealEndUnloadDate( switch (ship.getCargo().getCargoType()) {
-        case LIQUID -> liquidOffloadLine.getNextOffloadTime(entry.getArriveDate(), ship);
-        case LOOSE -> looseOffloadLine.getNextOffloadTime(entry.getArriveDate(), ship);
-        case CONTAINER -> containerOffloadLine.getNextOffloadTime(entry.getArriveDate(), ship);
+        case LIQUID -> liquidOffloadLine.getNextOffloadTime(entry.getArriveDate(), ship, delayConditions);
+        case LOOSE -> looseOffloadLine.getNextOffloadTime(entry.getArriveDate(), ship, delayConditions);
+        case CONTAINER -> containerOffloadLine.getNextOffloadTime(entry.getArriveDate(), ship, delayConditions);
       });
       System.out.println(entry.getRealEndUnloadDate());
     }

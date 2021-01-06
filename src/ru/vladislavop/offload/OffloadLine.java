@@ -5,6 +5,7 @@ import ru.vladislavop.crane.DelayCondition;
 import ru.vladislavop.crane.Loadable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class OffloadLine<T extends Loadable> {
@@ -18,24 +19,23 @@ public class OffloadLine<T extends Loadable> {
   }
 
   public long getNextOffloadTime(long plannedStartHandleTime, Ship ship, List<DelayCondition> delayConditions) {
-    int nearestTimeInd = 0;
-    for (int i = 0; i < releaseTimes.size(); i++) {
-      if (plannedStartHandleTime > releaseTimes.get(i)) {
-        long resultTime = plannedStartHandleTime + crane.calculateUnloadTime(ship.getCargo());
-        resultTime += calculateFullDelayTime(plannedStartHandleTime, resultTime, delayConditions);
-        releaseTimes.set(i, resultTime);
-        return releaseTimes.get(i);
-      } else if (releaseTimes.get(nearestTimeInd) - plannedStartHandleTime > releaseTimes.get(i) - plannedStartHandleTime)
-        nearestTimeInd = i;
-    }
-    long resultTime = releaseTimes.get(nearestTimeInd) + crane.calculateUnloadTime(ship.getCargo());
-    resultTime += calculateFullDelayTime(releaseTimes.get(nearestTimeInd), resultTime, delayConditions);
+    HashMap<Integer, Long> map = getStartOffloadTime(plannedStartHandleTime);
+    int nearestIndex = 0;
+    for (Integer index: map.keySet())
+      nearestIndex = index;
+    long resultTime =  map.get(nearestIndex) + crane.calculateUnloadTime(ship.getCargo());
+    resultTime += calculateFullDelayTime(map.get(nearestIndex), resultTime, delayConditions);
+    releaseTimes.set(nearestIndex, resultTime);
     return resultTime;
   }
 
-
-  public long getNextOffloadTime(long plannedStartHandleTime, Ship ship) {
-    return this.getNextOffloadTime(plannedStartHandleTime, ship, new ArrayList<>());
+  public HashMap<Integer, Long> getStartOffloadTime(long plannedStartHandleTime) {
+    HashMap<Integer, Long> resultMap = new HashMap<>();
+    int releaseTimeIndex = getNearestTimeIndex(plannedStartHandleTime);
+    resultMap.put(releaseTimeIndex, plannedStartHandleTime > releaseTimes.get(releaseTimeIndex)
+        ? plannedStartHandleTime
+        : releaseTimes.get(releaseTimeIndex));
+    return resultMap;
   }
 
   private long calculateFullDelayTime(long startTime, long plannedEndTime, List<DelayCondition> delayConditions) {
@@ -46,6 +46,16 @@ public class OffloadLine<T extends Loadable> {
         fullDelayTime += delay.getDelayTime();
     }
     return fullDelayTime;
+  }
+
+  private int getNearestTimeIndex(long plannedStartHandleTime) {
+    int nearestTimeInd = 0;
+    for (int i = 0; i < releaseTimes.size(); i++)
+      if (plannedStartHandleTime > releaseTimes.get(i))
+        return i;
+      else if (releaseTimes.get(nearestTimeInd) - plannedStartHandleTime > releaseTimes.get(i) - plannedStartHandleTime)
+        nearestTimeInd = i;
+    return nearestTimeInd;
   }
 
 }
