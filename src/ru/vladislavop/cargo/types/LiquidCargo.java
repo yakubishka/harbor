@@ -13,4 +13,5 @@ public class LiquidCargo extends BaseCargo {
     return CargoType.LIQUID;
   }
 
+
 }

@@ -5,22 +5,25 @@ import ru.vladislavop.Utils;
 
 public class ScheduleEntry{
 
-  private long arriveDateTimestamp;
+  private long arriveDate;
   private Ship ship;
   private long plannedUnloadPeriod;
 
-  public ScheduleEntry(Ship ship, long arriveDateTimestamp, long plannedUnloadPeriod) {
-    this.arriveDateTimestamp = arriveDateTimestamp;
+  private long realStartUnloadDate;
+  private long realEndUnloadDate;
+
+  public ScheduleEntry(Ship ship, long arriveDate, long plannedUnloadPeriod) {
+    this.arriveDate = arriveDate;
     this.ship = ship;
     this.plannedUnloadPeriod = plannedUnloadPeriod;
   }
 
-  public long getArriveDateTimestamp() {
-    return arriveDateTimestamp;
+  public long getArriveDate() {
+    return arriveDate;
   }
 
-  public void setArriveDateTimestamp(long arriveDateTimestamp) {
-    this.arriveDateTimestamp = arriveDateTimestamp;
+  public void setArriveDate(long arriveDate) {
+    this.arriveDate = arriveDate;
   }
 
   public Ship getShip() {
@@ -39,10 +42,31 @@ public class ScheduleEntry{
     this.plannedUnloadPeriod = plannedUnloadPeriod;
   }
 
+  public long getPlannedSailOffTime() {
+    return arriveDate + plannedUnloadPeriod;
+  }
+
+  public long getRealStartUnloadDate() {
+    return realStartUnloadDate;
+  }
+
+  public void setRealStartUnloadDate(long realStartUnloadDate) {
+    this.realStartUnloadDate = realStartUnloadDate;
+  }
+
+  public long getRealEndUnloadDate() {
+    return realEndUnloadDate;
+  }
+
+  public void setRealEndUnloadDate(long realEndUnloadDate) {
+    this.realEndUnloadDate = realEndUnloadDate;
+  }
+
   @Override
   public String toString() {
     return "Ship name: " + ship.getName() + Utils.columnDelimiter +
-           "arrive date: " + arriveDateTimestamp + Utils.columnDelimiter +
-           "upload period: " + plannedUnloadPeriod + Utils.columnDelimiter;
+           "arrive date: " + arriveDate + Utils.columnDelimiter +
+           "upload period: " + plannedUnloadPeriod + Utils.columnDelimiter +
+           "real unload end: " + realEndUnloadDate + Utils.columnDelimiter;
   }
 }

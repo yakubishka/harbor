@@ -2,8 +2,11 @@ package ru.vladislavop;
 
 import ru.vladislavop.cargo.types.ContainerCargo;
 import ru.vladislavop.cargo.types.LiquidCargo;
+import ru.vladislavop.offload.Offloader;
 import ru.vladislavop.schedule.ScheduleEntry;
 import ru.vladislavop.schedule.Scheduler;
+
+import java.util.ArrayList;
 
 public class Main {
 
@@ -21,6 +24,12 @@ public class Main {
     scheduler.addEntry(firstEntry);
     scheduler.addEntry(secondEntry);
 
+    scheduler.printSchedule();
+
+    Offloader offloader = new Offloader();
+    offloader.offload(scheduler, new ArrayList<>());
+
+    System.out.println("-------------------------------------");
     scheduler.printSchedule();
 
   }

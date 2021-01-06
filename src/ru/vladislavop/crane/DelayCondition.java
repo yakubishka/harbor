@@ -4,10 +4,14 @@ public class DelayCondition {
 
   private String conditionName;
   private long delayTime;
+  private long startTime;
+  private long endTime;
 
-  public DelayCondition(String conditionName, long delayTime) {
+  public DelayCondition(String conditionName, long delayTime, long startTime, long endTime) {
     this.conditionName = conditionName;
     this.delayTime = delayTime;
+    this.startTime = startTime;
+    this.endTime = endTime;
   }
 
   public String getConditionName() {
@@ -26,4 +30,19 @@ public class DelayCondition {
     this.delayTime = delayTime;
   }
 
+  public long getStartTime() {
+    return startTime;
+  }
+
+  public void setStartTime(long startTime) {
+    this.startTime = startTime;
+  }
+
+  public long getEndTime() {
+    return endTime;
+  }
+
+  public void setEndTime(long endTime) {
+    this.endTime = endTime;
+  }
 }
