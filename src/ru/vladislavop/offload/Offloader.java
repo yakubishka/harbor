@@ -11,19 +11,22 @@ import java.util.List;
 
 public class Offloader {
 
-  private final OffloadLine<CraneLiquid> liquidOffloadLine = new OffloadLine<>(10, new CraneLiquid());
-  private final OffloadLine<CraneContainer> containerOffloadLine = new OffloadLine<>(10, new CraneContainer());
-  private final OffloadLine<CraneLoose> looseOffloadLine = new OffloadLine<>(10, new CraneLoose());
+  private final int CRANES_COUNT = 10;
+
+  private final OffloadLine<CraneLiquid> liquidOffloadLine = new OffloadLine<>(CRANES_COUNT, new CraneLiquid());
+  private final OffloadLine<CraneContainer> containerOffloadLine = new OffloadLine<>(CRANES_COUNT, new CraneContainer());
+  private final OffloadLine<CraneLoose> looseOffloadLine = new OffloadLine<>(CRANES_COUNT, new CraneLoose());
 
   public void offload(Scheduler scheduler, List<DelayCondition> delayConditions) {
     for (ScheduleEntry entry : scheduler.getScheduleList()) {
       Ship ship = entry.getShip();
-      entry.setRealEndUnloadDate( switch (ship.getCargo().getCargoType()) {
-        case LIQUID -> liquidOffloadLine.getNextOffloadTime(entry.getArriveDate(), ship, delayConditions);
-        case LOOSE -> looseOffloadLine.getNextOffloadTime(entry.getArriveDate(), ship, delayConditions);
-        case CONTAINER -> containerOffloadLine.getNextOffloadTime(entry.getArriveDate(), ship, delayConditions);
-      });
-      System.out.println(entry.getRealEndUnloadDate());
+      OffloadLine<?> line = switch (ship.getCargo().getCargoType()) {
+        case LIQUID -> liquidOffloadLine;
+        case LOOSE -> looseOffloadLine;
+        case CONTAINER -> containerOffloadLine;
+      };
+      entry.setRealStartUnloadDate(line.getStartOffloadTime(entry.getArriveDate()));
+      entry.setRealEndUnloadDate(line.getNextOffloadTime(entry.getArriveDate(), ship, delayConditions));
     }
   }
 

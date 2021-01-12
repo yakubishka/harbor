@@ -1,5 +1,8 @@
 package ru.vladislavop.schedule;
 
+import ru.vladislavop.utils.DateUtils;
+import ru.vladislavop.utils.Utils;
+
 import java.util.ArrayList;
 
 public class Scheduler {
@@ -17,6 +20,7 @@ public class Scheduler {
   }
 
   public void printSchedule() {
+    System.out.println(Utils.rowDelimiter);
     for (ScheduleEntry entry : scheduleList)
       System.out.println(entry);
   }
@@ -25,37 +29,58 @@ public class Scheduler {
     long waitingTime = 0;
     for (ScheduleEntry entry : scheduleList)
       waitingTime += entry.getRealStartUnloadDate() - entry.getArriveDate();
-    System.out.println("----------------------------------");
-    System.out.println("Average waiting time is " + (waitingTime / scheduleList.size()));
+    System.out.println(Utils.rowDelimiter);
+    System.out.println("Average waiting time: " + (waitingTime / scheduleList.size()));
   }
 
   public void printCountOfUnloadedShips() {
-    System.out.println("----------------------------------");
-    System.out.println("Count of unloaded ships is " + scheduleList.size());
+    System.out.println(Utils.rowDelimiter);
+    System.out.println("Count of unloaded ships: " + scheduleList.size());
   }
 
   public void printMaxAndMinWaitingTime() {
     long maxWaitingTime = 0;
-    long minWaitingTime = scheduleList.get(0).getRealStartUnloadDate() - scheduleList.get(0).getArriveDate();
-    for (ScheduleEntry entry : scheduleList) {
-      long entryWaitingTime = entry.getRealStartUnloadDate() - entry.getArriveDate();
-      if (maxWaitingTime < entryWaitingTime)
-        maxWaitingTime = entryWaitingTime;
-      if (minWaitingTime > entryWaitingTime)
-        minWaitingTime = entryWaitingTime;
+    if (!scheduleList.isEmpty()) {
+      long minWaitingTime = DateUtils.calculateDayDiff(
+          scheduleList.get(0).getRealStartUnloadDate(),
+          scheduleList.get(0).getArriveDate()
+      );
+      for (ScheduleEntry entry : scheduleList) {
+        long entryWaitingTime = DateUtils.calculateDayDiff(entry.getRealStartUnloadDate(), entry.getArriveDate());
+        if (maxWaitingTime < entryWaitingTime)
+          maxWaitingTime = entryWaitingTime;
+        if (minWaitingTime > entryWaitingTime && entryWaitingTime > 0)
+          minWaitingTime = entryWaitingTime;
+      }
+      System.out.println(Utils.rowDelimiter);
+      System.out.println("Min waiting time: " + minWaitingTime);
+      System.out.println("Max waiting time: " + maxWaitingTime);
     }
-    System.out.println("----------------------------------");
-    System.out.println("Min waiting time is " + minWaitingTime);
-    System.out.println("Max waiting time is " + maxWaitingTime);
   }
 
-  //TODO minor refactor
   public void printFullExpirationPrice() {
+    System.out.println(Utils.rowDelimiter);
+    System.out.println("Full price for expiration: " + getFullExpirationTimeInDays() * Utils.penniPerDay);
+  }
+
+  public void printExtraCranesCountRequired() {
+    System.out.println("----------------------------------");
+    System.out.println("Extra cranes needed for unloading: " + calculateExtraCranesCountReq());
+  }
+
+  private int calculateExtraCranesCountReq() {
+    int extraCraneCount = 0;
+    for (ScheduleEntry entry : scheduleList)
+      if (entry.expireTimeInDays() > 1 && entry.getRealStartUnloadDate() > entry.getArriveDate())
+        extraCraneCount++;
+    return extraCraneCount;
+  }
+
+  private long getFullExpirationTimeInDays() {
     long fullExpirationTime = 0;
     for (ScheduleEntry entry : scheduleList)
-      fullExpirationTime += entry.getRealEndUnloadDate() - entry.getPlannedSailOffTime();
-    System.out.println("----------------------------------");
-    System.out.println("Full price for expiration is " + fullExpirationTime);
+      fullExpirationTime += entry.expireTimeInDays();
+    return fullExpirationTime;
   }
 
   public ArrayList<ScheduleEntry> getScheduleList() {

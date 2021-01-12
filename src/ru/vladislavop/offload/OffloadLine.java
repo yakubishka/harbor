@@ -5,13 +5,12 @@ import ru.vladislavop.crane.DelayCondition;
 import ru.vladislavop.crane.Loadable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class OffloadLine<T extends Loadable> {
 
-  protected ArrayList<Long> releaseTimes = new ArrayList<>();
-  protected T crane;
+  private final ArrayList<Long> releaseTimes = new ArrayList<>();
+  private final T crane;
 
   public OffloadLine(int cranesCount, T crane) {
     for (int i = 0; i < cranesCount; i++) releaseTimes.add(0L);
@@ -19,23 +18,16 @@ public class OffloadLine<T extends Loadable> {
   }
 
   public long getNextOffloadTime(long plannedStartHandleTime, Ship ship, List<DelayCondition> delayConditions) {
-    HashMap<Integer, Long> map = getStartOffloadTime(plannedStartHandleTime);
-    int nearestIndex = 0;
-    for (Integer index: map.keySet())
-      nearestIndex = index;
-    long resultTime =  map.get(nearestIndex) + crane.calculateUnloadTime(ship.getCargo());
-    resultTime += calculateFullDelayTime(map.get(nearestIndex), resultTime, delayConditions);
-    releaseTimes.set(nearestIndex, resultTime);
+    long startOffloadTime = getStartOffloadTime(plannedStartHandleTime);
+    long resultTime =  startOffloadTime + crane.calculateUnloadTime(ship.getCargo());
+    resultTime += calculateFullDelayTime(startOffloadTime, resultTime, delayConditions);
+    releaseTimes.set(getNearestTimeIndex(plannedStartHandleTime), resultTime);
     return resultTime;
   }
 
-  public HashMap<Integer, Long> getStartOffloadTime(long plannedStartHandleTime) {
-    HashMap<Integer, Long> resultMap = new HashMap<>();
+  public long getStartOffloadTime(long plannedStartHandleTime) {
     int releaseTimeIndex = getNearestTimeIndex(plannedStartHandleTime);
-    resultMap.put(releaseTimeIndex, plannedStartHandleTime > releaseTimes.get(releaseTimeIndex)
-        ? plannedStartHandleTime
-        : releaseTimes.get(releaseTimeIndex));
-    return resultMap;
+    return plannedStartHandleTime > releaseTimes.get(releaseTimeIndex) ? plannedStartHandleTime : releaseTimes.get(releaseTimeIndex);
   }
 
   private long calculateFullDelayTime(long startTime, long plannedEndTime, List<DelayCondition> delayConditions) {

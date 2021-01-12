@@ -1,9 +1,10 @@
 package ru.vladislavop.schedule;
 
 import ru.vladislavop.Ship;
-import ru.vladislavop.Utils;
+import ru.vladislavop.utils.DateUtils;
+import ru.vladislavop.utils.Utils;
 
-public class ScheduleEntry{
+public class ScheduleEntry {
 
   private long arriveDate;
   private Ship ship;
@@ -62,11 +63,17 @@ public class ScheduleEntry{
     this.realEndUnloadDate = realEndUnloadDate;
   }
 
+  public long expireTimeInDays() {
+    long expiration = DateUtils.calculateDayDiff(getRealEndUnloadDate(), getPlannedSailOffTime());
+    return expiration > 0 ? expiration : 0;
+  }
+
   @Override
   public String toString() {
     return "Ship name: " + ship.getName() + Utils.columnDelimiter +
-           "arrive date: " + arriveDate + Utils.columnDelimiter +
-           "upload period: " + plannedUnloadPeriod + Utils.columnDelimiter +
-           "real unload end: " + realEndUnloadDate + Utils.columnDelimiter;
+        "arrive date: " + DateUtils.convertTimestampToString(arriveDate) + Utils.columnDelimiter +
+        "upload period: " + DateUtils.secondsToDays(plannedUnloadPeriod) + Utils.columnDelimiter +
+        "real unload end: " + DateUtils.convertTimestampToString(realEndUnloadDate) + Utils.columnDelimiter +
+        "expiration: " + expireTimeInDays() + " days" + Utils.columnDelimiter;
   }
 }
