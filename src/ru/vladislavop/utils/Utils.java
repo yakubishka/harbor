@@ -6,11 +6,11 @@ public class Utils {
   public static final String rowDelimiter = "----------------------------------";
   public static final int penniPerDay = 1000;
   public static final String entryFormat =
-      "%8s" + columnDelimiter +
-      "%8s" + columnDelimiter +
-      "%8s" + columnDelimiter +
-      "%8s" + columnDelimiter +
-      "%8s" + columnDelimiter +
-      "%8s" + columnDelimiter;
+      "%12s" + columnDelimiter +
+      "%12s" + columnDelimiter +
+      "%12s" + columnDelimiter +
+      "%12s" + columnDelimiter +
+      "%12s" + columnDelimiter +
+      "%12s";
 
 }

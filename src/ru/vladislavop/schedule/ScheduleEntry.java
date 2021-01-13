@@ -75,11 +75,11 @@ public class ScheduleEntry {
 
   @Override
   public String toString() {
-    return "name: " + ship.getName() + Utils.columnDelimiter +
-        "arrive date: " + DateUtils.convertTimestampToString(arriveDate) + Utils.columnDelimiter +
-        "planned unload end: " + DateUtils.convertTimestampToString(getPlannedSailOffTime()) + Utils.columnDelimiter +
-        "real unload start: " + DateUtils.convertTimestampToString(getRealStartUnloadDate()) + Utils.columnDelimiter +
-        "real unload end: " + DateUtils.convertTimestampToString(realEndUnloadDate) + Utils.columnDelimiter +
-        "expiration: " + expireTimeInDays() + " days" + Utils.columnDelimiter;
+    return String.format(Utils.entryFormat, ship.getName(),
+        DateUtils.convertTimestampToString(arriveDate),
+        DateUtils.convertTimestampToString(getPlannedSailOffTime()),
+        DateUtils.convertTimestampToString(getRealStartUnloadDate()),
+        DateUtils.convertTimestampToString(realEndUnloadDate),
+        expireTimeInDays());
   }
 }
