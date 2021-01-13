@@ -1,15 +1,19 @@
 package ru.vladislavop.crane;
 
+import ru.vladislavop.utils.DateUtils;
+
+import java.util.Random;
+
 public class DelayCondition {
 
   private String conditionName;
-  private long delayTime;
-  private long startTime;
-  private long endTime;
+  private final long delayTime;
+  private final long startTime;
+  private final long endTime;
 
-  public DelayCondition(String conditionName, long delayTime, long startTime, long endTime) {
+  public DelayCondition(String conditionName, long startTime, long endTime) {
     this.conditionName = conditionName;
-    this.delayTime = delayTime;
+    this.delayTime = DateUtils.daysToMillis((new Random()).nextInt(11));
     this.startTime = startTime;
     this.endTime = endTime;
   }
@@ -26,23 +30,12 @@ public class DelayCondition {
     return delayTime;
   }
 
-  public void setDelayTime(long delayTime) {
-    this.delayTime = delayTime;
-  }
-
   public long getStartTime() {
     return startTime;
-  }
-
-  public void setStartTime(long startTime) {
-    this.startTime = startTime;
   }
 
   public long getEndTime() {
     return endTime;
   }
 
-  public void setEndTime(long endTime) {
-    this.endTime = endTime;
-  }
 }

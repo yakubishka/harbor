@@ -8,7 +8,7 @@ public class CraneLiquid implements Loadable {
 
   @Override
   public long calculateUnloadTime(BaseCargo cargo) {
-    return (long) cargo.getWeight() * DateUtils.daysToSeconds(2);
+    return (long) cargo.getWeight() * DateUtils.daysToMillis(2);
   }
 
 }

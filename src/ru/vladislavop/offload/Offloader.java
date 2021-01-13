@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Offloader {
 
-  private final int CRANES_COUNT = 10;
+  private final int CRANES_COUNT = 3;
 
   private final OffloadLine<CraneLiquid> liquidOffloadLine = new OffloadLine<>(CRANES_COUNT, new CraneLiquid());
   private final OffloadLine<CraneContainer> containerOffloadLine = new OffloadLine<>(CRANES_COUNT, new CraneContainer());

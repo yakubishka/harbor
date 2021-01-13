@@ -4,19 +4,24 @@ import ru.vladislavop.Ship;
 import ru.vladislavop.utils.DateUtils;
 import ru.vladislavop.utils.Utils;
 
+import java.text.ParseException;
+
 public class ScheduleEntry {
 
-  private long arriveDate;
   private Ship ship;
+
+  private long arriveDate = 0L;
   private long plannedUnloadPeriod;
 
   private long realStartUnloadDate;
   private long realEndUnloadDate;
 
-  public ScheduleEntry(Ship ship, long arriveDate, long plannedUnloadPeriod) {
-    this.arriveDate = arriveDate;
+  public ScheduleEntry(Ship ship, String arriveDate, int plannedUnloadDaysPeriod) {
     this.ship = ship;
-    this.plannedUnloadPeriod = plannedUnloadPeriod;
+    try {
+      this.arriveDate = DateUtils.convertStringToTimestamp(arriveDate);
+    } catch (ParseException e) { e.printStackTrace(); }
+    this.plannedUnloadPeriod = DateUtils.daysToMillis(plannedUnloadDaysPeriod);
   }
 
   public long getArriveDate() {
@@ -70,9 +75,10 @@ public class ScheduleEntry {
 
   @Override
   public String toString() {
-    return "Ship name: " + ship.getName() + Utils.columnDelimiter +
+    return "name: " + ship.getName() + Utils.columnDelimiter +
         "arrive date: " + DateUtils.convertTimestampToString(arriveDate) + Utils.columnDelimiter +
-        "upload period: " + DateUtils.secondsToDays(plannedUnloadPeriod) + Utils.columnDelimiter +
+        "planned unload end: " + DateUtils.convertTimestampToString(getPlannedSailOffTime()) + Utils.columnDelimiter +
+        "real unload start: " + DateUtils.convertTimestampToString(getRealStartUnloadDate()) + Utils.columnDelimiter +
         "real unload end: " + DateUtils.convertTimestampToString(realEndUnloadDate) + Utils.columnDelimiter +
         "expiration: " + expireTimeInDays() + " days" + Utils.columnDelimiter;
   }

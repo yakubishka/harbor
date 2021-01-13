@@ -3,6 +3,7 @@ package ru.vladislavop.offload;
 import ru.vladislavop.Ship;
 import ru.vladislavop.crane.DelayCondition;
 import ru.vladislavop.crane.Loadable;
+import ru.vladislavop.utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,9 @@ public class OffloadLine<T extends Loadable> {
     this.crane = crane;
   }
 
+  /**
+   * @param delayConditions must be sorted by delayStartTime list
+   */
   public long getNextOffloadTime(long plannedStartHandleTime, Ship ship, List<DelayCondition> delayConditions) {
     long startOffloadTime = getStartOffloadTime(plannedStartHandleTime);
     long resultTime =  startOffloadTime + crane.calculateUnloadTime(ship.getCargo());
@@ -34,8 +38,9 @@ public class OffloadLine<T extends Loadable> {
     long fullDelayTime = 0;
     for (DelayCondition delay : delayConditions) {
       if ((delay.getStartTime() > startTime && delay.getStartTime() < plannedEndTime) ||
-          (delay.getEndTime() < plannedEndTime && delay.getEndTime() > startTime))
+          (delay.getEndTime() < plannedEndTime && delay.getEndTime() > startTime)) {
         fullDelayTime += delay.getDelayTime();
+      }
     }
     return fullDelayTime;
   }

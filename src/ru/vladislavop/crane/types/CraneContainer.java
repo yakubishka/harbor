@@ -8,7 +8,7 @@ public class CraneContainer implements Loadable {
 
   @Override
   public long calculateUnloadTime(BaseCargo cargo) {
-    return (long) cargo.getWeight() * DateUtils.daysToSeconds(1);
+    return (long) cargo.getWeight() * DateUtils.daysToMillis(1);
   }
 
 }

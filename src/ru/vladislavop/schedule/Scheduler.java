@@ -9,6 +9,10 @@ public class Scheduler {
 
   private final ArrayList<ScheduleEntry> scheduleList = new ArrayList<>();
 
+  public ArrayList<ScheduleEntry> getScheduleList() {
+    return scheduleList;
+  }
+
   public void addEntry(ScheduleEntry entry) {
     int sortedPosition = 0;
     for (int i = 0; i < scheduleList.size(); i++)
@@ -30,7 +34,7 @@ public class Scheduler {
     for (ScheduleEntry entry : scheduleList)
       waitingTime += entry.getRealStartUnloadDate() - entry.getArriveDate();
     System.out.println(Utils.rowDelimiter);
-    System.out.println("Average waiting time: " + (waitingTime / scheduleList.size()));
+    System.out.println("Average waiting time: " + DateUtils.millisToDays(waitingTime / scheduleList.size()));
   }
 
   public void printCountOfUnloadedShips() {
@@ -41,15 +45,12 @@ public class Scheduler {
   public void printMaxAndMinWaitingTime() {
     long maxWaitingTime = 0;
     if (!scheduleList.isEmpty()) {
-      long minWaitingTime = DateUtils.calculateDayDiff(
-          scheduleList.get(0).getRealStartUnloadDate(),
-          scheduleList.get(0).getArriveDate()
-      );
+      long minWaitingTime = -1;
       for (ScheduleEntry entry : scheduleList) {
         long entryWaitingTime = DateUtils.calculateDayDiff(entry.getRealStartUnloadDate(), entry.getArriveDate());
         if (maxWaitingTime < entryWaitingTime)
           maxWaitingTime = entryWaitingTime;
-        if (minWaitingTime > entryWaitingTime && entryWaitingTime > 0)
+        if ((minWaitingTime > entryWaitingTime || minWaitingTime == -1) && entryWaitingTime > 0)
           minWaitingTime = entryWaitingTime;
       }
       System.out.println(Utils.rowDelimiter);
@@ -68,6 +69,15 @@ public class Scheduler {
     System.out.println("Extra cranes needed for unloading: " + calculateExtraCranesCountReq());
   }
 
+  public void printReport() {
+    printSchedule();
+    printCountOfUnloadedShips();
+    printMaxAndMinWaitingTime();
+    printAvgWaitingTime();
+    printFullExpirationPrice();
+    printExtraCranesCountRequired();
+  }
+
   private int calculateExtraCranesCountReq() {
     int extraCraneCount = 0;
     for (ScheduleEntry entry : scheduleList)
@@ -81,10 +91,6 @@ public class Scheduler {
     for (ScheduleEntry entry : scheduleList)
       fullExpirationTime += entry.expireTimeInDays();
     return fullExpirationTime;
-  }
-
-  public ArrayList<ScheduleEntry> getScheduleList() {
-    return scheduleList;
   }
 
 }
